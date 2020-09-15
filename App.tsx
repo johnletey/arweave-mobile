@@ -1,12 +1,28 @@
-import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
 
 export default function App() {
+  let key = {};
+
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
+      <Button
+        title="Load Arweave Keyfile"
+        onPress={async () => {
+          const result = await DocumentPicker.getDocumentAsync({
+            type: "application/json",
+          });
+          if (result.type === "cancel") return;
+          try {
+            const content = await FileSystem.readAsStringAsync(result.uri);
+            key = JSON.parse(content);
+          } catch (e) {
+            // 
+          }
+        }}
+      />
     </View>
   );
 }
